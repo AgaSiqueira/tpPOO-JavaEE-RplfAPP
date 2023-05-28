@@ -4,11 +4,14 @@
  */
 package classes;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author Fatec
  */
 public class Alugador {
+    public static ArrayList<Alugador> list = new ArrayList<>();
     String nomeAlugador, cpf, email, telefone, endereco;
     int cdAlugador;
 
