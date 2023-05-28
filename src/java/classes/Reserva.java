@@ -23,14 +23,6 @@ public class Reserva {
         this.devolucao = devolucao;
         //aplicar 20 dias
     }
-    
-    public ArrayList<Integer> getLivrosReservados() {
-        return livrosReservados;
-    }
-
-    public void setLivrosReservados(ArrayList<Integer> livrosReservados) {
-        this.livrosReservados = livrosReservados;
-    }
 
     public int getCdLivroReserva() {
         return cdLivroReserva;

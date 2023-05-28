@@ -4,11 +4,14 @@
  */
 package classes;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author Fatec
  */
 public class Livro {
+    public static ArrayList<Livro> list = new ArrayList<>();
     String titulo,autor, genero,sinopse, editora, isbn, idioma;
     int idLivro,disponibilidade, quantidade, ano;
 
