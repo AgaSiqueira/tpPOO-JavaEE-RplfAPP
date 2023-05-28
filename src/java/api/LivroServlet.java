@@ -5,6 +5,7 @@
 package api;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -13,17 +14,17 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import classes.Alugador;
+import classes.Livro;
 import java.util.Random;
 
 /**
  *
  * @author agath
  */
-@WebServlet(name = "AlugadorServlet", urlPatterns = {"/alugador"})
-public class AlugadorServlet extends HttpServlet {
+@WebServlet(name = "LivroServlet", urlPatterns = {"/livro"})
+public class LivroServlet extends HttpServlet {
 
-    private JSONObject getJSONBody(BufferedReader reader) throws Exception{
+     private JSONObject getJSONBody(BufferedReader reader) throws Exception{
          StringBuilder buffer = new StringBuilder();
          String line = null;
          while((line = reader.readLine()) != null){
@@ -31,6 +32,7 @@ public class AlugadorServlet extends HttpServlet {
          }
          return new JSONObject(buffer.toString());
      }
+    
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
@@ -47,7 +49,7 @@ public class AlugadorServlet extends HttpServlet {
         response.setContentType("application/json;charset = utf-8");
         JSONObject file = new JSONObject();
        try{
-           file.put("Alugadores", new JSONArray(Alugador.list));
+           file.put("Livros", new JSONArray(Livro.list));
        }catch(Exception ex){
            response.setStatus(500);
            file.put("error", ex.getLocalizedMessage());
@@ -71,28 +73,37 @@ public class AlugadorServlet extends HttpServlet {
        try{
            JSONObject body = getJSONBody(request.getReader());
            //pegando valores
+           //strings
+           String titulo = body.getString("titulo");
+           String autor = body.getString("autor");
+           String genero = body.getString("genero");
+           String sinopse = body.getString("sinopse");
+           String editora = body.getString("editora");
+           String isbn = body.getString("isbn");
+           String idioma = body.getString("idioma");
+           //int
+           int  idLivro,disponibilidade=0, quantidade=0, ano=0;
            Random random = new Random();
-           int cdAlugador = random.nextInt(100);
-           String nomeAlugador = body.getString("nomeAlugador");
-           String cpf = body.getString("cpf");
-           String email = body.getString("email");
-           String telefone = body.getString("telefone");
-           String endereco = body.getString("endereco");
+           idLivro = random.nextInt(100);
+           disponibilidade = body.getInt("disponibilidade");
+           quantidade = body.getInt("quantidade");
+           ano = body.getInt("ano");
            
-           if(nomeAlugador != null && cpf != null && email != null && 
-                   telefone != null && endereco != null){
-               Alugador alugar = new Alugador(nomeAlugador,cpf,email,
-                       telefone,endereco,cdAlugador);
-               Alugador.list.add(alugar);
+           if(titulo != null && autor != null && genero != null && 
+                   sinopse != null && editora != null && isbn != null && 
+                   idioma != null && disponibilidade != 0 && quantidade != 0 && 
+                   ano != 0){
+               Livro livros = new Livro(titulo,autor,genero,sinopse,editora,
+                       isbn,idioma, idLivro, disponibilidade,quantidade,ano);
+               Livro.list.add(livros);
            }
-           file.put("Alugadores", new JSONArray(Alugador.list));
+           file.put("Livros", new JSONArray(Livro.list));
        }catch(Exception ex){
            response.setStatus(500);
            file.put("error", ex.getLocalizedMessage());
        }
        response.getWriter().print(file.toString());
     }
-    
     /**
      * Handles the HTTP <code>DELETE</code> method.
      *
@@ -107,22 +118,21 @@ public class AlugadorServlet extends HttpServlet {
         response.setContentType("application/json;charset = utf-8");
         JSONObject file = new JSONObject();
        try{
-           String identificador = request.getParameter("alugador");
-           int alugadorRetirado = -1;
-           for(Alugador a: Alugador.list){
-               if(a.getCpf().equals(identificador) || a.getCdAlugador() == Integer.parseInt(identificador)){
-                alugadorRetirado= Alugador.list.indexOf(a);
+           int identificador = Integer.parseInt(request.getParameter("livro"));
+           int livroRetirado = -1;
+           for(Livro l: Livro.list){
+               if(l.getIdLivro()== identificador){
+                livroRetirado= Livro.list.indexOf(l);
                 break;
                }
            }
-           if (alugadorRetirado>-1) Alugador.list.remove(alugadorRetirado);
-           file.put("Alugadores", new JSONArray(Alugador.list));
+           if (livroRetirado>-1) Livro.list.remove(livroRetirado);
+           file.put("Livros", new JSONArray(Livro.list));
        }catch(Exception ex){
            response.setStatus(500);
            file.put("error", ex.getLocalizedMessage());
        }
        response.getWriter().print(file.toString());
-        
     }
     
     
