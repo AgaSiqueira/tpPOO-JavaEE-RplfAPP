@@ -12,7 +12,7 @@ import java.util.Date;
  * @author Fatec
  */
 public class Reserva {
-    ArrayList<Integer> livrosReservados = new ArrayList<Integer>();
+    public static ArrayList<Reserva> livrosReservados = new ArrayList<Reserva>();
     int cdLivroReserva, cdReserva, cdAlugadorReserva;
     Date devolucao;
 
