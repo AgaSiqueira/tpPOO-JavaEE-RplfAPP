@@ -84,7 +84,7 @@ public class LivroServlet extends HttpServlet {
            //int
            int  idLivro,disponibilidade=0, quantidade=0, ano=0;
            Random random = new Random();
-           idLivro = random.nextInt(100);
+           idLivro = random.nextInt(10000);
            disponibilidade = body.getInt("disponibilidade");
            quantidade = body.getInt("quantidade");
            ano = body.getInt("ano");

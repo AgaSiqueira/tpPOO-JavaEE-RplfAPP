@@ -79,7 +79,7 @@ public class ReservaServlet extends HttpServlet {
            Random random = new Random();
            int cdLivroReserva=0, cdReserva=0, cdAlugadorReserva=0;
            cdLivroReserva = body.getInt("cdLivroReserva");
-           cdReserva = random.nextInt(100);
+           cdReserva = random.nextInt(10000);
            cdAlugadorReserva = body.getInt("cdAlugadorReserva");
            //data
            String devolucao = body.getString("devolucao");
@@ -114,12 +114,11 @@ public class ReservaServlet extends HttpServlet {
         response.setContentType("application/json;charset = utf-8");
         JSONObject file = new JSONObject();
        try{
-           int identificadorAlugador = Integer.parseInt(request.getParameter("alugador"));
            int identificadorReserva = Integer.parseInt(request.getParameter("reserva"));
 
            int reservaRetirada = -1;
            for(Reserva r: Reserva.livrosReservados){
-               if(r.getCdAlugadorReserva()== identificadorAlugador && r.getCdReserva() == identificadorReserva){
+               if(r.getCdReserva() == identificadorReserva){
                 reservaRetirada= Reserva.livrosReservados.indexOf(r);
                 break;
                }

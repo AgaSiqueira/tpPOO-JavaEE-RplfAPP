@@ -72,7 +72,7 @@ public class AlugadorServlet extends HttpServlet {
            JSONObject body = getJSONBody(request.getReader());
            //pegando valores
            Random random = new Random();
-           int cdAlugador = random.nextInt(100);
+           int cdAlugador = random.nextInt(10000);
            String nomeAlugador = body.getString("nomeAlugador");
            String cpf = body.getString("cpf");
            String email = body.getString("email");
@@ -107,10 +107,10 @@ public class AlugadorServlet extends HttpServlet {
         response.setContentType("application/json;charset = utf-8");
         JSONObject file = new JSONObject();
        try{
-           String identificador = request.getParameter("alugador");
+           int indentificador = Integer.parseInt(request.getParameter("alugador"));
            int alugadorRetirado = -1;
            for(Alugador a: Alugador.list){
-               if(a.getCpf().equals(identificador) || a.getCdAlugador() == Integer.parseInt(identificador)){
+               if(a.getCdAlugador() == indentificador){
                 alugadorRetirado= Alugador.list.indexOf(a);
                 break;
                }
