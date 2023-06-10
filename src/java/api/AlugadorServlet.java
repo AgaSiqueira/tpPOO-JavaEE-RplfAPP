@@ -92,6 +92,55 @@ public class AlugadorServlet extends HttpServlet {
        }
        response.getWriter().print(file.toString());
     }
+
+    @Override
+    protected void doPut(HttpServletRequest request, HttpServletResponse response) 
+            throws ServletException, IOException {
+        response.setContentType("application/json;charset = utf-8");
+        JSONObject file = new JSONObject();
+        try{
+            int identificador = Integer.parseInt(request.getParameter("cdAlugador"));
+            Alugador alugadorAtualizado = null;
+            for (Alugador alugar : Alugador.list) {
+                if (alugar.getCdAlugador() == identificador) {
+                    alugadorAtualizado = alugar;
+                    break;
+                }
+            }
+            if (alugadorAtualizado != null) {
+                JSONObject body = getJSONBody(request.getReader());
+                if (body.has("nomeAlugador")) {
+                    alugadorAtualizado.setNomeAlugador(body.getString("nomeAlugador"));
+                }
+                if (body.has("cpf")) {
+                    alugadorAtualizado.setCpf(body.getString("cpf"));
+                }
+                if (body.has("email")) {
+                    alugadorAtualizado.setEmail(body.getString("email"));
+                }
+                if (body.has("telefone")) {
+                    alugadorAtualizado.setTelefone(body.getString("telefone"));
+                }
+                if (body.has("endereco")) {
+                    alugadorAtualizado.setEndereco(body.getString("endereco"));
+                }
+                
+                int index = Alugador.list.indexOf(alugadorAtualizado);
+                Alugador.list.set(index, alugadorAtualizado);
+                file.put("Alugadores", new JSONArray(Alugador.list));
+            } else {
+                response.setStatus(404);
+                file.put("error", "Alugador não encontrado");
+            }
+        }catch(Exception ex){
+           response.setStatus(500);
+           file.put("error", ex.getLocalizedMessage());
+       }
+       response.getWriter().print(file.toString());
+
+    }
+    
+    
     
     /**
      * Handles the HTTP <code>DELETE</code> method.
@@ -107,7 +156,7 @@ public class AlugadorServlet extends HttpServlet {
         response.setContentType("application/json;charset = utf-8");
         JSONObject file = new JSONObject();
        try{
-           int indentificador = Integer.parseInt(request.getParameter("alugador"));
+           int indentificador = Integer.parseInt(request.getParameter("cdAlugador"));
            int alugadorRetirado = -1;
            for(Alugador a: Alugador.list){
                if(a.getCdAlugador() == indentificador){

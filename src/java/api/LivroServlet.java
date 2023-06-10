@@ -5,7 +5,6 @@
 package api;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -104,6 +103,68 @@ public class LivroServlet extends HttpServlet {
        }
        response.getWriter().print(file.toString());
     }
+
+    @Override
+    protected void doPut(HttpServletRequest request, HttpServletResponse response) 
+            throws ServletException, IOException {
+        response.setContentType("application/json;charset = utf-8");
+        JSONObject file = new JSONObject();
+        try{
+            int identificador = Integer.parseInt(request.getParameter("idLivro"));
+            Livro livroAtualizado = null;
+            for (Livro livro : Livro.list) {
+                if (livro.getIdLivro() == identificador) {
+                    livroAtualizado = livro;
+                    break;
+                }
+            }
+            if (livroAtualizado != null) {
+            JSONObject body = getJSONBody(request.getReader());
+            if (body.has("titulo")) {
+                livroAtualizado.setTitulo(body.getString("titulo"));
+            }
+            if (body.has("autor")) {
+                livroAtualizado.setAutor(body.getString("autor"));
+            }
+            if (body.has("genero")) {
+                livroAtualizado.setGenero(body.getString("genero"));
+            }
+            if (body.has("sinopse")) {
+                livroAtualizado.setSinopse(body.getString("sinopse"));
+            }
+            if (body.has("editora")) {
+                livroAtualizado.setEditora(body.getString("editora"));
+            }
+            if (body.has("isbn")) {
+                livroAtualizado.setIsbn(body.getString("isbn"));
+            }
+            if (body.has("idioma")) {
+                livroAtualizado.setIdioma(body.getString("idioma"));
+            }
+            if (body.has("disponibilidade")) {
+                livroAtualizado.setDisponibilidade(body.getInt("disponibilidade"));
+            }
+            if (body.has("quantidade")) {
+                livroAtualizado.setQuantidade(body.getInt("quantidade"));
+            }
+            if (body.has("ano")) {
+                livroAtualizado.setAno(body.getInt("ano"));
+            }
+            int index = Livro.list.indexOf(livroAtualizado);
+            Livro.list.set(index, livroAtualizado);
+            file.put("Livros", new JSONArray(Livro.list));
+            } else {
+                response.setStatus(404);
+                file.put("error", "Livro não encontrado");
+            }
+        }catch(Exception ex){
+           response.setStatus(500);
+           file.put("error", ex.getLocalizedMessage());
+       }
+       response.getWriter().print(file.toString());
+            
+    }
+    
     /**
      * Handles the HTTP <code>DELETE</code> method.
      *
@@ -118,7 +179,7 @@ public class LivroServlet extends HttpServlet {
         response.setContentType("application/json;charset = utf-8");
         JSONObject file = new JSONObject();
        try{
-           int identificador = Integer.parseInt(request.getParameter("livro"));
+           int identificador = Integer.parseInt(request.getParameter("idLivro"));
            int livroRetirado = -1;
            for(Livro l: Livro.list){
                if(l.getIdLivro()== identificador){

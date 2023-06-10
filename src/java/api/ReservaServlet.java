@@ -100,6 +100,45 @@ public class ReservaServlet extends HttpServlet {
        }
        response.getWriter().print(file.toString());
     }
+
+    @Override
+    protected void doPut(HttpServletRequest request, HttpServletResponse response) 
+            throws ServletException, IOException {
+       response.setContentType("application/json;charset = utf-8");
+        JSONObject file = new JSONObject();
+        try{
+            int identificador = Integer.parseInt(request.getParameter("cdReserva"));
+            Reserva reservaAtualizada = null;
+            for (Reserva reservar : Reserva.livrosReservados) {
+                if (reservar.getCdReserva() == identificador) {
+                    reservaAtualizada = reservar;
+                    break;
+                }
+            }
+            if (reservaAtualizada != null) {
+                JSONObject body = getJSONBody(request.getReader());
+                if (body.has("cdLivroReserva")) {
+                    reservaAtualizada.setCdLivroReserva(body.getInt("cdLivroReserva"));
+                }
+                if (body.has("cdAlugadorReserva")) {
+                    reservaAtualizada.setCdAlugadorReserva(body.getInt("cdAlugadorReserva"));
+                }
+                int index = Reserva.livrosReservados.indexOf(reservaAtualizada);
+                Reserva.livrosReservados.set(index, reservaAtualizada);
+                file.put("Reservas", new JSONArray(Reserva.livrosReservados));
+            } else {
+                response.setStatus(404);
+                file.put("error", "Reserva não encontrado");
+            }
+        }catch(Exception ex){
+           response.setStatus(500);
+           file.put("error", ex.getLocalizedMessage());
+       }
+       response.getWriter().print(file.toString());
+    }
+    
+    
+    
     /**
      * Handles the HTTP <code>DELETE</code> method.
      *
@@ -114,7 +153,7 @@ public class ReservaServlet extends HttpServlet {
         response.setContentType("application/json;charset = utf-8");
         JSONObject file = new JSONObject();
        try{
-           int identificadorReserva = Integer.parseInt(request.getParameter("reserva"));
+           int identificadorReserva = Integer.parseInt(request.getParameter("cdReserva"));
 
            int reservaRetirada = -1;
            for(Reserva r: Reserva.livrosReservados){
