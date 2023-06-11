@@ -17,7 +17,7 @@ public class Reserva {
     
     public static String getCreateStatement() {
         return "CREATE TABLE IF NOT EXISTS reserva("
-                + "cdReserva PRIMARY KEY,"
+                + "cdReserva INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + "cdLivroReserva INTEGER,"
                 + "cdAlugadorReserva INTEGER,"
                 + "devolucao TEXT NOT NULL,"

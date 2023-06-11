@@ -19,7 +19,7 @@ public class Alugador {
     
     public static String getCreateStatement() {
         return "CREATE TABLE IF NOT EXISTS alugador("
-                + "cdAlugador PRIMARY KEY,"
+                + "cdAlugador INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + "nomeAlugador VARCHAR(50) NOT NULL,"
                 + "cpf VARCHAR(12) NOT NULL,"
                 + "email VARCHAR(50),"

@@ -14,11 +14,12 @@ import java.io.BufferedReader;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import classes.Livro;
+import java.util.ArrayList;
 import java.util.Random;
 
 /**
  *
- * @author agath
+ * @author agatha
  */
 @WebServlet(name = "LivroServlet", urlPatterns = {"/livro"})
 public class LivroServlet extends HttpServlet {
@@ -33,22 +34,49 @@ public class LivroServlet extends HttpServlet {
      }
     
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("application/json;charset = utf-8");
         JSONObject file = new JSONObject();
        try{
-           file.put("Livros", new JSONArray(Livro.list));
+           if(request.getParameter("idLivro") != null) {
+                int identificador = Integer.parseInt(request.getParameter("idLivro"));
+                Livro l = Livro.getLivro(identificador);
+                JSONObject o = new JSONObject();
+                o.put("idLivro", l.getIdLivro());
+                o.put("titulo", l.getTitulo());
+                o.put("autor", l.getAutor());
+                o.put("genero", l.getGenero());
+                o.put("sinopse", l.getSinopse());
+                o.put("editora", l.getEditora());
+                o.put("isbn", l.getIsbn());
+                o.put("idioma", l.getIdioma());
+                o.put("disponibilidade", l.getDisponibilidade());
+                o.put("quantidade", l.getQuantidade());
+                o.put("ano", l.getAno());
+                file.put("Livros", o);
+           }
+           else {
+                ArrayList<Livro> list = Livro.getLivros();
+                JSONArray arr = new JSONArray();
+                for(Livro l : list) {
+                    JSONObject o = new JSONObject();
+                    o.put("idLivro", l.getIdLivro());
+                    o.put("titulo", l.getTitulo());
+                    o.put("autor", l.getAutor());
+                    o.put("genero", l.getGenero());
+                    o.put("sinopse", l.getSinopse());
+                    o.put("editora", l.getEditora());
+                    o.put("isbn", l.getIsbn());
+                    o.put("idioma", l.getIdioma());
+                    o.put("disponibilidade", l.getDisponibilidade());
+                    o.put("quantidade", l.getQuantidade());
+                    o.put("ano", l.getAno());
+                    arr.put(o);
+                }
+                file.put("Livros", arr);
+           }
        }catch(Exception ex){
            response.setStatus(500);
            file.put("error", ex.getLocalizedMessage());
@@ -56,47 +84,50 @@ public class LivroServlet extends HttpServlet {
        response.getWriter().print(file.toString());
     }
 
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("application/json;charset = utf-8");
         JSONObject file = new JSONObject();
        try{
-           JSONObject body = getJSONBody(request.getReader());
-           //pegando valores
-           //strings
-           String titulo = body.getString("titulo");
-           String autor = body.getString("autor");
-           String genero = body.getString("genero");
-           String sinopse = body.getString("sinopse");
-           String editora = body.getString("editora");
-           String isbn = body.getString("isbn");
-           String idioma = body.getString("idioma");
-           //int
-           int  idLivro,disponibilidade=0, quantidade=0, ano=0;
-           Random random = new Random();
-           idLivro = random.nextInt(10000);
-           disponibilidade = body.getInt("disponibilidade");
-           quantidade = body.getInt("quantidade");
-           ano = body.getInt("ano");
+            JSONObject body = getJSONBody(request.getReader());
+            //pegando valores
+            String titulo = body.getString("titulo");
+            String autor = body.getString("autor");
+            String genero = body.getString("sinopse");
+            String sinopse = body.getString("sinopse");
+            String editora = body.getString("editora");
+            String isbn = body.getString("isbn");
+            String idioma = body.getString("idioma");
+            Integer disponibilidade = body.getInt("disponibilidade");
+            Integer quantidade = body.getInt("quantidade");
+            Integer ano = body.getInt("ano");
            
-           if(titulo != null && autor != null && genero != null && 
-                   sinopse != null && editora != null && isbn != null && 
-                   idioma != null && disponibilidade != 0 && quantidade != 0 && 
-                   ano != 0){
-               Livro livros = new Livro(titulo,autor,genero,sinopse,editora,
-                       isbn,idioma, idLivro, disponibilidade,quantidade,ano);
-               Livro.list.add(livros);
-           }
-           file.put("Livros", new JSONArray(Livro.list));
+            if(titulo != null && autor != null && genero != null && 
+                    sinopse != null && editora != null && isbn != null && 
+                    idioma != null && disponibilidade != 0 && quantidade != 0 && 
+                    ano != 0){
+                Livro.insertLivro(titulo, autor, genero, sinopse, editora, isbn, idioma, disponibilidade, quantidade, ano);
+            }
+           
+            ArrayList<Livro> list = Livro.getLivros();
+            JSONArray arr = new JSONArray();
+            for(Livro l : list) {
+                JSONObject o = new JSONObject();
+                o.put("idLivro", l.getIdLivro());
+                o.put("titulo", l.getTitulo());
+                o.put("autor", l.getAutor());
+                o.put("genero", l.getGenero());
+                o.put("sinopse", l.getSinopse());
+                o.put("editora", l.getEditora());
+                o.put("isbn", l.getIsbn());
+                o.put("idioma", l.getIdioma());
+                o.put("disponibilidade", l.getDisponibilidade());
+                o.put("quantidade", l.getQuantidade());
+                o.put("ano", l.getAno());
+                arr.put(o);
+            }
+            file.put("Livros", arr);
        }catch(Exception ex){
            response.setStatus(500);
            file.put("error", ex.getLocalizedMessage());
@@ -111,100 +142,79 @@ public class LivroServlet extends HttpServlet {
         JSONObject file = new JSONObject();
         try{
             int identificador = Integer.parseInt(request.getParameter("idLivro"));
-            Livro livroAtualizado = null;
-            for (Livro livro : Livro.list) {
-                if (livro.getIdLivro() == identificador) {
-                    livroAtualizado = livro;
-                    break;
-                }
-            }
-            if (livroAtualizado != null) {
             JSONObject body = getJSONBody(request.getReader());
-            if (body.has("titulo")) {
-                livroAtualizado.setTitulo(body.getString("titulo"));
+            String titulo = body.getString("titulo");
+            String autor = body.getString("autor");
+            String genero = body.getString("sinopse");
+            String sinopse = body.getString("sinopse");
+            String editora = body.getString("editora");
+            String isbn = body.getString("isbn");
+            String idioma = body.getString("idioma");
+            Integer disponibilidade = body.getInt("disponibilidade");
+            Integer quantidade = body.getInt("quantidade");
+            Integer ano = body.getInt("ano");
+            Livro.updateLivro(identificador, titulo, autor, genero, sinopse, editora, isbn, idioma, disponibilidade, quantidade, ano);
+            
+            ArrayList<Livro> list = Livro.getLivros();
+            JSONArray arr = new JSONArray();
+            for(Livro l : list) {
+                JSONObject o = new JSONObject();
+                o.put("idLivro", l.getIdLivro());
+                o.put("titulo", l.getTitulo());
+                o.put("autor", l.getAutor());
+                o.put("genero", l.getGenero());
+                o.put("sinopse", l.getSinopse());
+                o.put("editora", l.getEditora());
+                o.put("isbn", l.getIsbn());
+                o.put("idioma", l.getIdioma());
+                o.put("disponibilidade", l.getDisponibilidade());
+                o.put("quantidade", l.getQuantidade());
+                o.put("ano", l.getAno());
+                arr.put(o);
             }
-            if (body.has("autor")) {
-                livroAtualizado.setAutor(body.getString("autor"));
-            }
-            if (body.has("genero")) {
-                livroAtualizado.setGenero(body.getString("genero"));
-            }
-            if (body.has("sinopse")) {
-                livroAtualizado.setSinopse(body.getString("sinopse"));
-            }
-            if (body.has("editora")) {
-                livroAtualizado.setEditora(body.getString("editora"));
-            }
-            if (body.has("isbn")) {
-                livroAtualizado.setIsbn(body.getString("isbn"));
-            }
-            if (body.has("idioma")) {
-                livroAtualizado.setIdioma(body.getString("idioma"));
-            }
-            if (body.has("disponibilidade")) {
-                livroAtualizado.setDisponibilidade(body.getInt("disponibilidade"));
-            }
-            if (body.has("quantidade")) {
-                livroAtualizado.setQuantidade(body.getInt("quantidade"));
-            }
-            if (body.has("ano")) {
-                livroAtualizado.setAno(body.getInt("ano"));
-            }
-            int index = Livro.list.indexOf(livroAtualizado);
-            Livro.list.set(index, livroAtualizado);
-            file.put("Livros", new JSONArray(Livro.list));
-            } else {
-                response.setStatus(404);
-                file.put("error", "Livro não encontrado");
-            }
+            file.put("Livros", arr);
         }catch(Exception ex){
            response.setStatus(500);
            file.put("error", ex.getLocalizedMessage());
        }
        response.getWriter().print(file.toString());
-            
+
     }
     
-    /**
-     * Handles the HTTP <code>DELETE</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
         response.setContentType("application/json;charset = utf-8");
         JSONObject file = new JSONObject();
-       try{
+        try{
            int identificador = Integer.parseInt(request.getParameter("idLivro"));
-           int livroRetirado = -1;
-           for(Livro l: Livro.list){
-               if(l.getIdLivro()== identificador){
-                livroRetirado= Livro.list.indexOf(l);
-                break;
-               }
-           }
-           if (livroRetirado>-1) Livro.list.remove(livroRetirado);
-           file.put("Livros", new JSONArray(Livro.list));
-       }catch(Exception ex){
+           
+           Livro.deleteLivro(identificador);
+           
+           ArrayList<Livro> list = Livro.getLivros();
+            JSONArray arr = new JSONArray();
+            for(Livro l : list) {
+                JSONObject o = new JSONObject();
+                o.put("idLivro", l.getIdLivro());
+                o.put("titulo", l.getTitulo());
+                o.put("autor", l.getAutor());
+                o.put("genero", l.getGenero());
+                o.put("sinopse", l.getSinopse());
+                o.put("editora", l.getEditora());
+                o.put("isbn", l.getIsbn());
+                o.put("idioma", l.getIdioma());
+                o.put("disponibilidade", l.getDisponibilidade());
+                o.put("quantidade", l.getQuantidade());
+                o.put("ano", l.getAno());
+                arr.put(o);
+            }
+            file.put("Livros", arr);
+        }catch(Exception ex){
            response.setStatus(500);
            file.put("error", ex.getLocalizedMessage());
-       }
-       response.getWriter().print(file.toString());
+        }
+        response.getWriter().print(file.toString());
+        
     }
-    
-    
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
 
 }

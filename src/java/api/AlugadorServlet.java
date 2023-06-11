@@ -14,6 +14,7 @@ import java.io.BufferedReader;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import classes.Alugador;
+import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -31,8 +32,7 @@ public class AlugadorServlet extends HttpServlet {
          }
          return new JSONObject(buffer.toString());
      }
-
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+    
     /**
      * Handles the HTTP <code>GET</code> method.
      *
@@ -47,7 +47,33 @@ public class AlugadorServlet extends HttpServlet {
         response.setContentType("application/json;charset = utf-8");
         JSONObject file = new JSONObject();
        try{
-           file.put("Alugadores", new JSONArray(Alugador.list));
+           if(request.getParameter("cdAlugador") != null) {
+                int identificador = Integer.parseInt(request.getParameter("cdAlugador"));
+                Alugador a = Alugador.getAlugador(identificador);
+                JSONObject o = new JSONObject();
+                o.put("cdAlugador", a.getCdAlugador());
+                o.put("nomeAlugador", a.getNomeAlugador());
+                o.put("cpf", a.getCpf());
+                o.put("email", a.getEmail());
+                o.put("telefone", a.getTelefone());
+                o.put("endereco", a.getEndereco());
+                file.put("Alugadores", o);
+           }
+           else {
+                ArrayList<Alugador> list = Alugador.getAlugadores();
+                JSONArray arr = new JSONArray();
+                for(Alugador a : list) {
+                    JSONObject o = new JSONObject();
+                    o.put("cdAlugador", a.getCdAlugador());
+                    o.put("nomeAlugador", a.getNomeAlugador());
+                    o.put("cpf", a.getCpf());
+                    o.put("email", a.getEmail());
+                    o.put("telefone", a.getTelefone());
+                    o.put("endereco", a.getEndereco());
+                    arr.put(o);
+                }
+                file.put("Alugadores", arr);
+           }
        }catch(Exception ex){
            response.setStatus(500);
            file.put("error", ex.getLocalizedMessage());
@@ -55,14 +81,6 @@ public class AlugadorServlet extends HttpServlet {
        response.getWriter().print(file.toString());
     }
 
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -71,8 +89,6 @@ public class AlugadorServlet extends HttpServlet {
        try{
            JSONObject body = getJSONBody(request.getReader());
            //pegando valores
-           Random random = new Random();
-           int cdAlugador = random.nextInt(10000);
            String nomeAlugador = body.getString("nomeAlugador");
            String cpf = body.getString("cpf");
            String email = body.getString("email");
@@ -81,11 +97,22 @@ public class AlugadorServlet extends HttpServlet {
            
            if(nomeAlugador != null && cpf != null && email != null && 
                    telefone != null && endereco != null){
-               Alugador alugar = new Alugador(nomeAlugador,cpf,email,
-                       telefone,endereco,cdAlugador);
-               Alugador.list.add(alugar);
+               Alugador.insertAlugador(nomeAlugador,cpf,email,
+                       telefone,endereco);
            }
-           file.put("Alugadores", new JSONArray(Alugador.list));
+           ArrayList<Alugador> list = Alugador.getAlugadores();
+           JSONArray arr = new JSONArray();
+           for(Alugador a : list) {
+               JSONObject o = new JSONObject();
+               o.put("cdAlugador", a.getCdAlugador());
+               o.put("nomeAlugador", a.getNomeAlugador());
+               o.put("cpf", a.getCpf());
+               o.put("email", a.getEmail());
+               o.put("telefone", a.getTelefone());
+               o.put("endereco", a.getEndereco());
+               arr.put(o);
+           }
+           file.put("Alugadores", arr);
        }catch(Exception ex){
            response.setStatus(500);
            file.put("error", ex.getLocalizedMessage());
@@ -100,38 +127,27 @@ public class AlugadorServlet extends HttpServlet {
         JSONObject file = new JSONObject();
         try{
             int identificador = Integer.parseInt(request.getParameter("cdAlugador"));
-            Alugador alugadorAtualizado = null;
-            for (Alugador alugar : Alugador.list) {
-                if (alugar.getCdAlugador() == identificador) {
-                    alugadorAtualizado = alugar;
-                    break;
-                }
-            }
-            if (alugadorAtualizado != null) {
-                JSONObject body = getJSONBody(request.getReader());
-                if (body.has("nomeAlugador")) {
-                    alugadorAtualizado.setNomeAlugador(body.getString("nomeAlugador"));
-                }
-                if (body.has("cpf")) {
-                    alugadorAtualizado.setCpf(body.getString("cpf"));
-                }
-                if (body.has("email")) {
-                    alugadorAtualizado.setEmail(body.getString("email"));
-                }
-                if (body.has("telefone")) {
-                    alugadorAtualizado.setTelefone(body.getString("telefone"));
-                }
-                if (body.has("endereco")) {
-                    alugadorAtualizado.setEndereco(body.getString("endereco"));
-                }
-                
-                int index = Alugador.list.indexOf(alugadorAtualizado);
-                Alugador.list.set(index, alugadorAtualizado);
-                file.put("Alugadores", new JSONArray(Alugador.list));
-            } else {
-                response.setStatus(404);
-                file.put("error", "Alugador não encontrado");
-            }
+            JSONObject body = getJSONBody(request.getReader());
+            String nomeAlugador = body.getString("nomeAlugador");
+            String cpf = body.getString("cpf");
+            String email = body.getString("email");
+            String telefone = body.getString("telefone");
+            String endereco = body.getString("endereco");
+            Alugador.updateAlugador(identificador, nomeAlugador, cpf, email, telefone, endereco);
+            
+            ArrayList<Alugador> list = Alugador.getAlugadores();
+           JSONArray arr = new JSONArray();
+           for(Alugador a : list) {
+               JSONObject o = new JSONObject();
+               o.put("cdAlugador", a.getCdAlugador());
+               o.put("nomeAlugador", a.getNomeAlugador());
+               o.put("cpf", a.getCpf());
+               o.put("email", a.getEmail());
+               o.put("telefone", a.getTelefone());
+               o.put("endereco", a.getEndereco());
+               arr.put(o);
+           }
+           file.put("Alugadores", arr);
         }catch(Exception ex){
            response.setStatus(500);
            file.put("error", ex.getLocalizedMessage());
@@ -140,32 +156,29 @@ public class AlugadorServlet extends HttpServlet {
 
     }
     
-    
-    
-    /**
-     * Handles the HTTP <code>DELETE</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
         response.setContentType("application/json;charset = utf-8");
         JSONObject file = new JSONObject();
        try{
-           int indentificador = Integer.parseInt(request.getParameter("cdAlugador"));
-           int alugadorRetirado = -1;
-           for(Alugador a: Alugador.list){
-               if(a.getCdAlugador() == indentificador){
-                alugadorRetirado= Alugador.list.indexOf(a);
-                break;
-               }
+           int identificador = Integer.parseInt(request.getParameter("cdAlugador"));
+           
+           Alugador.deleteAlugador(identificador);
+           
+           ArrayList<Alugador> list = Alugador.getAlugadores();
+           JSONArray arr = new JSONArray();
+           for(Alugador a : list) {
+               JSONObject o = new JSONObject();
+               o.put("cdAlugador", a.getCdAlugador());
+               o.put("nomeAlugador", a.getNomeAlugador());
+               o.put("cpf", a.getCpf());
+               o.put("email", a.getEmail());
+               o.put("telefone", a.getTelefone());
+               o.put("endereco", a.getEndereco());
+               arr.put(o);
            }
-           if (alugadorRetirado>-1) Alugador.list.remove(alugadorRetirado);
-           file.put("Alugadores", new JSONArray(Alugador.list));
+           file.put("Alugadores", arr);
        }catch(Exception ex){
            response.setStatus(500);
            file.put("error", ex.getLocalizedMessage());
@@ -173,16 +186,5 @@ public class AlugadorServlet extends HttpServlet {
        response.getWriter().print(file.toString());
         
     }
-    
-    
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
 
 }
