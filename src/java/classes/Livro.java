@@ -16,7 +16,7 @@ public class Livro {
     
     public static String getCreateStatement() {
         return "CREATE TABLE IF NOT EXISTS livro("
-                + "idLivro PRIMARY KEY,"
+                + "idLivro INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + "titulo VARCHAR(50) NOT NULL,"
                 + "autor VARCHAR(12) NOT NULL,"
                 + "genero VARCHAR(50),"
@@ -24,7 +24,7 @@ public class Livro {
                 + "editora VARCHAR(20),"
                 + "isbn VARCHAR(100),"
                 + "idioma VARCHAR(100),"
-                + "disponibilidade INTEGER DEFAULT 1,"
+                + "disponibilidade INTEGER,"
                 + "quantidade INTEGER,"
                 + "ano INTEGER"
                 + ")";
@@ -123,6 +123,21 @@ public class Livro {
             con.close();
             Livro livro = new Livro(titulo, autor, genero, sinopse, editora, isbn, idioma, idLivro, disponibilidade, quantidade, ano);
             return livro;
+    }
+    
+    public static void mudarDisponibilidadeLivro(int idLivro, int mudanca) throws Exception {
+            Connection con = AppListener.getConnection();
+            String sql = "UPDATE livro SET disponibilidade=? WHERE idLivro=?";
+            
+            Livro l = getLivro(idLivro);
+            int disponibilidade = l.getDisponibilidade() + mudanca;
+            
+            PreparedStatement stmt = con.prepareStatement(sql);
+            stmt.setInt(1, disponibilidade);
+            stmt.setInt(2, idLivro);
+            stmt.execute();
+            stmt.close();
+            con.close();
     }
     
     public static void deleteLivro(int idLivro) throws Exception {

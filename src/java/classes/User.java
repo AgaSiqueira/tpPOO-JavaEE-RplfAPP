@@ -18,7 +18,7 @@ public class User {
     
     public static String getCreateStatement() {
         return "CREATE TABLE IF NOT EXISTS user("
-                + "nomeUser PRIMARY KEY,"
+                + "nomeUser VARCHAR(50) PRIMARY KEY,"
                 + "senhaUser VARCHAR(50) NOT NULL"
                 + ")";
     }
