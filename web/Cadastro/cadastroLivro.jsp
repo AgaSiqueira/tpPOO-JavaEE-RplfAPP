@@ -46,10 +46,12 @@
 
         </form>
         
-            <a href="livros.jsp">Livros cadastrados</a>
+            <a href="../Consulta/livros.jsp">Livros cadastrados</a>
             
     </div>
-<a href="index.jsp">Voltar ao Menu</a>
+    
+    <a href="../index.jsp">Voltar ao Menu</a>
+    
     <script>
         new Vue({
             el: '#app',
@@ -70,7 +72,7 @@
             methods: {
                 submitForm() {
     // Enviar os dados para o servlet usando uma requisição POST
-    axios.post('livro', this.livro)
+    axios.post('../livro', this.livro)
         .then(response => {
             // Manipular a resposta do servidor
             console.log(response.data);

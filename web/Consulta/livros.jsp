@@ -13,7 +13,7 @@
         <h1>Livros Cadastrados</h1>
         
         <ul>
-            <li v-for="livro in livros" :key="livro.idLivro">
+            <li v-for="livro in livros" :key="">
                 <strong>Id:</strong> {{ livro.idLivro }}<br>
                 <strong>Título:</strong> {{ livro.titulo }}<br>
                 <strong>Autor:</strong> {{ livro.autor }}<br>
@@ -26,13 +26,16 @@
                 <strong>Quantidade:</strong> {{ livro.quantidade }}<br>
                 <strong>Ano:</strong> {{ livro.ano }}<br>
                 <button @click="deleteList(livro.idLivro)">Deletar Lista</button>
+                 <a :href="`../Consulta/editarLivros.jsp?idLivro=${livro.idLivro}`">Editar Livro</a>
                 <br>
                 
                 <br>
             </li>
         </ul>
     </div>
-<a href="index.jsp">Voltar ao Menu</a>
+    
+    <a href="../index.jsp">Voltar ao Menu</a>
+    
     <script>
         new Vue({
             el: '#app',
@@ -45,7 +48,7 @@
             methods: {
                 loadLivros() {
                     // Carregar os dados do servidor usando uma requisição GET
-                    axios.get('livro')
+                    axios.get('../livro')
                         .then(response => {
                             // Atualizar a lista de livros com os dados recebidos do servidor
                             this.livros = response.data.Livros;
@@ -54,9 +57,9 @@
                             console.error(error);
                         });
                 },
-                deleteList(livro) {
+                deleteList(idLivro) {
                     // Deletar um livro usando uma requisição DELETE com o parâmetro "livro"
-                    axios.delete('livro', { params: { livro } })
+                    axios.delete('../livro', { params: { idLivro } })
                         .then(response => {
                             // Atualizar a lista de livros após a exclusão
                             this.livros = response.data.Livros;

@@ -74,6 +74,7 @@ public class ReservaServlet extends HttpServlet {
         response.setContentType("application/json;charset = utf-8");
         JSONObject file = new JSONObject();
        try{
+                       
            JSONObject body = getJSONBody(request.getReader());
            //pegando valores
            Random random = new Random();
@@ -153,7 +154,7 @@ public class ReservaServlet extends HttpServlet {
         response.setContentType("application/json;charset = utf-8");
         JSONObject file = new JSONObject();
        try{
-           int identificadorReserva = Integer.parseInt(request.getParameter("cdReserva"));
+           int identificadorReserva = Integer.parseInt(request.getParameter("reserva"));
 
            int reservaRetirada = -1;
            for(Reserva r: Reserva.livrosReservados){

@@ -31,9 +31,11 @@
 
         </form>
         
-                    <a href="reservas.jsp">Reservas</a>        
+                    <a href="../Consulta/reservas.jsp">Reservas</a>        
     </div>
-<a href="index.jsp">Voltar ao Menu</a>
+    
+        <a href="../index.jsp">Voltar ao Menu</a>
+    
     <script>
         new Vue({
             el: "#app",
@@ -50,7 +52,7 @@
                         devolucao: this.devolucao
                     };
 
-                    axios.post("reservar", formData)
+                    axios.post('../reservar', formData)
                         .then(response => {
                             console.log(response.data);
                             // Lógica adicional após a resposta do servidor

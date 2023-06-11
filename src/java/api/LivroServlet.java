@@ -25,15 +25,14 @@ import java.util.Random;
 @MultipartConfig
 public class LivroServlet extends HttpServlet {
 
-     private JSONObject getJSONBody(BufferedReader reader) throws Exception{
-         StringBuilder buffer = new StringBuilder();
-         String line = null;
-         while((line = reader.readLine()) != null){
-             buffer.append(line);
-         }
-         return new JSONObject(buffer.toString());
-     }
-    
+    private JSONObject getJSONBody(BufferedReader reader) throws Exception {
+        StringBuilder buffer = new StringBuilder();
+        String line = null;
+        while ((line = reader.readLine()) != null) {
+            buffer.append(line);
+        }
+        return new JSONObject(buffer.toString());
+    }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
@@ -49,13 +48,13 @@ public class LivroServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("application/json;charset = utf-8");
         JSONObject file = new JSONObject();
-       try{
-           file.put("Livros", new JSONArray(Livro.list));
-       }catch(Exception ex){
-           response.setStatus(500);
-           file.put("error", ex.getLocalizedMessage());
-       }
-       response.getWriter().print(file.toString());
+        try {
+            file.put("Livros", new JSONArray(Livro.list));
+        } catch (Exception ex) {
+            response.setStatus(500);
+            file.put("error", ex.getLocalizedMessage());
+        }
+        response.getWriter().print(file.toString());
     }
 
     /**
@@ -71,47 +70,50 @@ public class LivroServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("application/json;charset = utf-8");
         JSONObject file = new JSONObject();
-       try{
-           JSONObject body = getJSONBody(request.getReader());
-           //pegando valores
-           //strings
-           String titulo = body.getString("titulo");
-           String autor = body.getString("autor");
-           String genero = body.getString("genero");
-           String sinopse = body.getString("sinopse");
-           String editora = body.getString("editora");
-           String isbn = body.getString("isbn");
-           String idioma = body.getString("idioma");
-           //int
-           int  idLivro,disponibilidade=0, quantidade=0, ano=0;
-           Random random = new Random();
-           idLivro = random.nextInt(10000);
-           disponibilidade = body.getInt("disponibilidade");
-           quantidade = body.getInt("quantidade");
-           ano = body.getInt("ano");
-           
-           if(titulo != null && autor != null && genero != null && 
-                   sinopse != null && editora != null && isbn != null && 
-                   idioma != null && disponibilidade != 0 && quantidade != 0 && 
-                   ano != 0){
-               Livro livros = new Livro(titulo,autor,genero,sinopse,editora,
-                       isbn,idioma, idLivro, disponibilidade,quantidade,ano);
-               Livro.list.add(livros);
-           }
-           file.put("Livros", new JSONArray(Livro.list));
-       }catch(Exception ex){
-           response.setStatus(500);
-           file.put("error", ex.getLocalizedMessage());
-       }
-       response.getWriter().print(file.toString());
+
+        try {
+
+            JSONObject body = getJSONBody(request.getReader());
+            //pegando valores
+            //strings
+            String titulo = body.getString("titulo");
+            String autor = body.getString("autor");
+            String genero = body.getString("genero");
+            String sinopse = body.getString("sinopse");
+            String editora = body.getString("editora");
+            String isbn = body.getString("isbn");
+            String idioma = body.getString("idioma");
+            //int
+            int idLivro, disponibilidade = 0, quantidade = 0, ano = 0;
+            Random random = new Random();
+            idLivro = random.nextInt(10000);
+            disponibilidade = body.getInt("disponibilidade");
+            quantidade = body.getInt("quantidade");
+            ano = body.getInt("ano");
+
+            if (titulo != null && autor != null && genero != null
+                    && sinopse != null && editora != null && isbn != null
+                    && idioma != null && disponibilidade != 0 && quantidade != 0
+                    && ano != 0) {
+                Livro livros = new Livro(titulo, autor, genero, sinopse, editora,
+                        isbn, idioma, idLivro, disponibilidade, quantidade, ano);
+                Livro.list.add(livros);
+            }
+            file.put("Livros", new JSONArray(Livro.list));
+        } catch (Exception ex) {
+            response.setStatus(500);
+            file.put("error", ex.getLocalizedMessage());
+        }
+        response.getWriter().print(file.toString());
     }
 
     @Override
-    protected void doPut(HttpServletRequest request, HttpServletResponse response) 
+    protected void doPut(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("application/json;charset = utf-8");
         JSONObject file = new JSONObject();
-        try{
+        try {
+
             int identificador = Integer.parseInt(request.getParameter("idLivro"));
             Livro livroAtualizado = null;
             for (Livro livro : Livro.list) {
@@ -121,52 +123,52 @@ public class LivroServlet extends HttpServlet {
                 }
             }
             if (livroAtualizado != null) {
-            JSONObject body = getJSONBody(request.getReader());
-            if (body.has("titulo")) {
-                livroAtualizado.setTitulo(body.getString("titulo"));
-            }
-            if (body.has("autor")) {
-                livroAtualizado.setAutor(body.getString("autor"));
-            }
-            if (body.has("genero")) {
-                livroAtualizado.setGenero(body.getString("genero"));
-            }
-            if (body.has("sinopse")) {
-                livroAtualizado.setSinopse(body.getString("sinopse"));
-            }
-            if (body.has("editora")) {
-                livroAtualizado.setEditora(body.getString("editora"));
-            }
-            if (body.has("isbn")) {
-                livroAtualizado.setIsbn(body.getString("isbn"));
-            }
-            if (body.has("idioma")) {
-                livroAtualizado.setIdioma(body.getString("idioma"));
-            }
-            if (body.has("disponibilidade")) {
-                livroAtualizado.setDisponibilidade(body.getInt("disponibilidade"));
-            }
-            if (body.has("quantidade")) {
-                livroAtualizado.setQuantidade(body.getInt("quantidade"));
-            }
-            if (body.has("ano")) {
-                livroAtualizado.setAno(body.getInt("ano"));
-            }
-            int index = Livro.list.indexOf(livroAtualizado);
-            Livro.list.set(index, livroAtualizado);
-            file.put("Livros", new JSONArray(Livro.list));
+                JSONObject body = getJSONBody(request.getReader());
+                if (body.has("titulo")) {
+                    livroAtualizado.setTitulo(body.getString("titulo"));
+                }
+                if (body.has("autor")) {
+                    livroAtualizado.setAutor(body.getString("autor"));
+                }
+                if (body.has("genero")) {
+                    livroAtualizado.setGenero(body.getString("genero"));
+                }
+                if (body.has("sinopse")) {
+                    livroAtualizado.setSinopse(body.getString("sinopse"));
+                }
+                if (body.has("editora")) {
+                    livroAtualizado.setEditora(body.getString("editora"));
+                }
+                if (body.has("isbn")) {
+                    livroAtualizado.setIsbn(body.getString("isbn"));
+                }
+                if (body.has("idioma")) {
+                    livroAtualizado.setIdioma(body.getString("idioma"));
+                }
+                if (body.has("disponibilidade")) {
+                    livroAtualizado.setDisponibilidade(body.getInt("disponibilidade"));
+                }
+                if (body.has("quantidade")) {
+                    livroAtualizado.setQuantidade(body.getInt("quantidade"));
+                }
+                if (body.has("ano")) {
+                    livroAtualizado.setAno(body.getInt("ano"));
+                }
+                int index = Livro.list.indexOf(livroAtualizado);
+                Livro.list.set(index, livroAtualizado);
+                file.put("Livros", new JSONArray(Livro.list));
             } else {
                 response.setStatus(404);
                 file.put("error", "Livro não encontrado");
             }
-        }catch(Exception ex){
-           response.setStatus(500);
-           file.put("error", ex.getLocalizedMessage());
-       }
-       response.getWriter().print(file.toString());
-            
+        } catch (Exception ex) {
+            response.setStatus(500);
+            file.put("error", ex.getLocalizedMessage());
+        }
+        response.getWriter().print(file.toString());
+
     }
-    
+
     /**
      * Handles the HTTP <code>DELETE</code> method.
      *
@@ -176,29 +178,31 @@ public class LivroServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doDelete(HttpServletRequest request, HttpServletResponse response) 
+    protected void doDelete(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("application/json;charset = utf-8");
         JSONObject file = new JSONObject();
-       try{
-           int identificador = Integer.parseInt(request.getParameter("idLivro"));
-           int livroRetirado = -1;
-           for(Livro l: Livro.list){
-               if(l.getIdLivro()== identificador){
-                livroRetirado= Livro.list.indexOf(l);
-                break;
-               }
-           }
-           if (livroRetirado>-1) Livro.list.remove(livroRetirado);
-           file.put("Livros", new JSONArray(Livro.list));
-       }catch(Exception ex){
-           response.setStatus(500);
-           file.put("error", ex.getLocalizedMessage());
-       }
-       response.getWriter().print(file.toString());
+        try {
+            int identificador = Integer.parseInt(request.getParameter("idLivro"));
+
+            int livroRetirado = -1;
+            for (Livro l : Livro.list) {
+                if (l.getIdLivro() == identificador) {
+                    livroRetirado = Livro.list.indexOf(l);
+                    break;
+                }
+            }
+            if (livroRetirado > -1) {
+                Livro.list.remove(livroRetirado);
+            }
+            file.put("Livros", new JSONArray(Livro.list));
+        } catch (Exception ex) {
+            response.setStatus(500);
+            file.put("error", ex.getLocalizedMessage());
+        }
+        response.getWriter().print(file.toString());
     }
-    
-    
+
     /**
      * Returns a short description of the servlet.
      *

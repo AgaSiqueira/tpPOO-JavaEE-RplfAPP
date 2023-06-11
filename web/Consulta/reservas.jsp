@@ -19,12 +19,11 @@
                     Código do Livro: {{ reserva.cdLivroReserva }},
                     Código do Alugador: {{ reserva.cdAlugadorReserva }},
                     Data de Devolução: {{ reserva.devolucao }}
-                    <button @click="excluirReserva(reserva)">Excluir</button>
-                    <a href="'devolucao.jsp?cdLivroReserva=' + reserva.cdLivroReserva + '&cdAlugadorReserva=' + reserva.cdAlugadorReserva + '&devolucao=' + reserva.devolucao">Devolver</a>
+                    <button @click="excluirReserva(reserva)">Excluir</button>                   
 
                 </li>
             </ul>
-            <a href="index.jsp">Voltar ao Menu</a>
+            <a href="../index.jsp">Voltar ao Menu</a>
         </div>
     </div>
 
@@ -39,7 +38,7 @@
             },
             methods: {
                 carregarReservas() {
-                    axios.get("reservar")
+                    axios.get("../reservar")
                         .then(response => {
                             console.log(response.data);
                             // Lógica adicional após a resposta do servidor
@@ -58,7 +57,7 @@
                         reserva: reserva.cdReserva
                     };
 
-                    axios.delete("reservar", { params })
+                    axios.delete("../reservar", { params })
                         .then(response => {
                             console.log(response.data);
                             // Lógica adicional após a resposta do servidor
