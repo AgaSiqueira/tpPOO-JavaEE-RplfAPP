@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Html.html to edit this template
+-->
+<html lang="en">
+  <head>
+       <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Book Check</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/sidebars/">
+  </head>
+  <body>
+      <script>
+       async function request(url = "", methd, data) {   
+           const response = await fetch(url, {
+               method:methd,
+               headers: {"Content-Type": "application/json" },
+               body: JSON.stringify(data)
+           });
+           return response.json();
+        }
+        
+         function tasks() {
+             return {
+                nomeAlugador:'',
+                cpf:'',
+                email:'',
+                telefone:'',
+                endereco:'',
+                Alugadores: [],
+                async loadTasks() {
+                    request("/tpPOO-JavaEE-RplfAPP/alugador", "GET").then((data) => {
+                        this.Alugadores = data.Alugadores;
+                    });
+                }, 
+                async addTask() {
+                    if(this.nomeAlugador === '' || this.nomeAlugador === null)
+                        alert("Preencha o campo Nome");
+                    else if(this.cpf === '' || this.cpf === null)
+                        alert("Preencha o campo CPF");
+                    else if(this.email === '' || this.email === null)
+                        alert("Preencha o campo E-mail");
+                    else if(this.telefone === '' || this.telefone === null)
+                        alert("Preencha o campo Telefone");
+                    else if(this.endereco === '' || this.endereco === null)
+                        alert("Preencha o campo Endereço");
+                    else
+                    {
+                        request("/tpPOO-JavaEE-RplfAPP/alugador", "POST", 
+                         {nomeAlugador: this.nomeAlugador, cpf: this.cpf, email: this.email, telefone: this.telefone, endereco: this.endereco}
+                        ).then((data) => {
+                             this.Alugadores = data.Alugadores;
+                        });  
+                    }
+                }, 
+                async removeTask(cdAlugador) {
+                   request("/tpPOO-JavaEE-RplfAPP/alugador?cdAlugador=" + cdAlugador, "DELETE").then((data) => {
+                        this.Alugadores = data.Alugadores;
+                   });                
+                }, 
+                async updateTask(cdAlugador) {
+                    if(this.nomeAlugador === '' || this.nomeAlugador === null)
+                        alert("Preencha o campo Nome");
+                    else if(this.cpf === '' || this.cpf === null)
+                        alert("Preencha o campo CPF");
+                    else if(this.email === '' || this.email === null)
+                        alert("Preencha o campo E-mail");
+                    else if(this.telefone === '' || this.telefone === null)
+                        alert("Preencha o campo Telefone");
+                    else if(this.endereco === '' || this.endereco === null)
+                        alert("Preencha o campo Endereço");
+                    else
+                    {
+                        request("/tpPOO-JavaEE-RplfAPP/alugador?cdAlugador=" + cdAlugador, "PUT",
+                        {nomeAlugador: this.nomeAlugador, cpf: this.cpf, email: this.email, telefone: this.telefone, endereco: this.endereco}
+                        ).then((data) => {
+                             this.Alugadores = data.Alugadores;
+                        });  
+                    }
+                }, 
+                async clear() {
+                    this.nomeAlugador='';
+                    this.cpf='';
+                    this.email='';
+                    this.telefone='';
+                    this.endereco='';             
+                }
+            }
+         }
+         
+         function loadByAlugador(alugador){
+             this.cdAlugador.value=alugador.cdAlugador;
+             this.nomeAlugador.value=alugador.nomeAlugador;
+             this.cpf.value=alugador.cpf;
+             this.email.value=alugador.email;
+             this.telefone.value=alugador.telefone;
+             this.endereco.value=alugador.endereco; 
+         }
+    </script>
+
+<header class="p-3 text-bg-dark">
+    <div class="container">
+      <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+        <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
+          <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap"><use xlink:href="#bootstrap"></use></svg>
+        </a>
+
+        <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+          <li><a href="/tpPOO-JavaEE-RplfAPP/alugadores.html" class="nav-link px-2 text-secondary">Alugadores</a></li>
+          <li><a href="/tpPOO-JavaEE-RplfAPP/Consulta/livros.jsp" class="nav-link px-2 text-white">Livros</a></li>
+          <li><a href="/tpPOO-JavaEE-RplfAPP/Consulta/reservas.jsp" class="nav-link px-2 text-white">Reservas</a></li>
+        </ul>
+        <div class="text-end">
+          <a href="/tpPOO-JavaEE-RplfAPP/login.html" class="btn btn-outline-light me-2" role="button" aria-disabled="true">Sair</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+    <div class="container-fluid m-4" x-data="tasks()" x-init="loadTasks()">
+        
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"
+          data-bs-whatever="@getbootstrap" x-on:click="this.cdAlugador.value='';clear()">Adicionar</button>
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Lista</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+              <div class="mb-3">
+                <input type="hidden" x-model="cdAlugador" id="cdAlugador">
+                <label for="nomeAlugador" class="form-label">Nome Completo</label>
+                <input type="text" class="form-control" x-model="nomeAlugador" id="nomeAlugador">
+              </div>
+              <div class="mb-3">
+                <label for="cpf" class="form-label">Cpf</label>
+                    <input type="text" class="form-control" x-model="cpf" id="cpf">
+              </div>
+              <div class="mb-3">
+                <label for="email" class="form-label">E-mail</label>
+                <input type="text" class="form-control" x-model="email" id="email">
+              </div>
+              <div class="mb-3">
+                <label for="telefone" class="form-label">Telefone</label>
+                <input type="text" class="form-control" x-model="telefone" id="telefone">
+              </div>
+              <div class="mb-3">
+                <label for="endereco" class="form-label">Endereço</label>
+                <input type="text" class="form-control" x-model="endereco" id="endereco">
+              </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" x-on:click="this.cdAlugador.value == '' ? addTask() : updateTask(this.cdAlugador.value)">Salvar</button> 
+            <!--
+            Se o código alugador for igual a "" significa que o método é addTask precisa ser chamado para criar um novo usuário
+            se o código alugador for diferente a "" significa que o método update task precisa ser chamado para atualizar um cadastro
+           
+            -->
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <table class="table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Nome</th>
+                <th>Cpf</th>
+                <th>E-mail</th>
+                <th>Telefone</th>
+                <th>Endereço</th>   
+            </tr>
+        </thead>
+        <tbody>
+            <template x-for="alugador in Alugadores">
+                <tr>
+                    <td>
+                        <button class="btn btn-outline-danger" type="button" x-on:click="removeTask(alugador.cdAlugador)">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z"/>
+                                <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z"/>
+                            </svg>
+                        </button>
+                        <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#exampleModal"
+          data-bs-whatever="@getbootstrap" x-on:click="loadByAlugador(alugador)">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                                <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                            </svg>
+                        </button>
+                    </td>
+                    <td>
+                        <span x-text="alugador.nomeAlugador"></span>
+                    </td>
+                    <td>
+                        <span x-text="alugador.cpf"></span>
+                    </td>
+                    <td>
+                        <span x-text="alugador.email"></span>
+                    </td>
+                    <td>
+                        <span x-text="alugador.telefone"></span>
+                    </td>
+                    <td>
+                        <span x-text="alugador.endereco"></span>
+                    </td>
+            </template>  
+        </tbody>
+    </table>
+  </div>    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+  </body>
+</html>
