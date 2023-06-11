@@ -36,7 +36,7 @@
                 </div>
 
                 <div class="mx-5 text-end">
-                    <a href="/tpPOO-JavaEE-RplfAPP/login.html" class="btn btn-outline-light me-2" role="button" aria-disabled="true">Sair</a>
+                    <a href="/tpPOO-JavaEE-RplfAPP/index.html" class="btn btn-outline-light me-2" role="button" aria-disabled="true">Sair</a>
                 </div>
             </div>
         </div>

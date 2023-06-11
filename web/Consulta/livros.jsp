@@ -56,7 +56,7 @@
                 </div>
 
                 <div class="mx-5 text-end">
-                    <a href="/tpPOO-JavaEE-RplfAPP/login.html" class="btn btn-outline-light me-2" role="button" aria-disabled="true">Sair</a>
+                    <a href="/tpPOO-JavaEE-RplfAPP/index.html" class="btn btn-outline-light me-2" role="button" aria-disabled="true">Sair</a>
                 </div>
             </div>
         </div>
@@ -125,7 +125,7 @@
     
     <div class="d-flex justify-content-between mx-5 mt-1 mb-3">
         <div class="container mt-1">
-            <a href="../index.jsp" class="btn btn-secondary">Voltar ao Menu</a>
+            <a href="../alugadores.html" class="btn btn-secondary">Voltar ao Menu</a>
         </div>
         <div class="text-center" >
             <a href="../Cadastro/cadastroLivro.jsp" class="btn btn-success"><strong>Cadastrar Livro</strong></a>
