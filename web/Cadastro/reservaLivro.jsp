@@ -6,36 +6,65 @@
     <title>Reserva de Livros</title>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.min.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    
+    <!-- Incluindo Bootstrap -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.2/css/bootstrap.min.css">
+    
+    <style>
+        body {
+            background-color: #87CEEB;
+        }
+        
+        form {
+            font-size: 20px;
+        }
+        
+          #form{
+            border: 1px solid #000;
+            border-radius: 10px;
+            background-color: #4682B4;
+        }
+    </style>
 </head>
 <body>
-    <h1>Reserva de Livros</h1>
+    <div id="app" class="container">
+        <h1 class="text-center">Reserva de Livros</h1>
 
-    <div id="app">
-        <form @submit.prevent="submitForm">
-            <div>
-                <label for="cdLivroReserva">Código do Livro:</label>
-                <input type="text" id="cdLivroReserva" v-model="cdLivroReserva" required>
-            </div>
-            <br>
-            <div>
-                <label for="cdAlugadorReserva">Código do Alugador:</label>
-                <input type="text" id="cdAlugadorReserva" v-model="cdAlugadorReserva" required>
-            </div>
-            <br>
-            <div>
-                <label for="devolucao">Data de Devolução:</label>
-                <input type="date" id="devolucao" v-model="devolucao" required>
-            </div>
-            <br>
-            <button type="submit">Reservar</button>
+        <div id="form" class="row justify-content-center mx-5 mt-4 pb-4 pt-4">
+            <div class="col-md-6">
+                <form @submit.prevent="submitForm">
+                    <div class="mb-3">
+                        <label for="cdLivroReserva" class="form-label font-weight-bold">Código do Livro:</label>
+                        <input type="text" id="cdLivroReserva" v-model="cdLivroReserva" required class="form-control">
+                    </div>
 
-        </form>
-        
-                    <a href="../Consulta/reservas.jsp">Reservas</a>        
+                    <div class="mb-3">
+                        <label for="cdAlugadorReserva" class="form-label font-weight-bold">Código do Alugador:</label>
+                        <input type="text" id="cdAlugadorReserva" v-model="cdAlugadorReserva" required class="form-control">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="devolucao" class="form-label font-weight-bold">Data de Devolução:</label>
+                        <input type="date" id="devolucao" v-model="devolucao" required class="form-control">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Reservar</button>
+                </form>
+            </div>
+        </div>
     </div>
-    
-        <a href="../index.jsp">Voltar ao Menu</a>
-    
+
+    <div class="container mt-4">
+        <div class="d-flex justify-content-between mx-5 mb-4">
+            <div>
+                <a href="../index.jsp"><strong>Voltar ao Menu</strong></a>
+            </div>
+            <div>
+                <a href="../Consulta/reservas.jsp"><strong>Reservas</strong></a>
+            </div>
+        </div>
+    </div>
+
     <script>
         new Vue({
             el: "#app",
