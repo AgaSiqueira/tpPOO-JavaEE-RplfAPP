@@ -6,6 +6,7 @@ package api;
 
 import java.io.IOException;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,6 +23,7 @@ import java.util.Random;
  * @author agatha
  */
 @WebServlet(name = "LivroServlet", urlPatterns = {"/livro"})
+@MultipartConfig
 public class LivroServlet extends HttpServlet {
 
      private JSONObject getJSONBody(BufferedReader reader) throws Exception{
