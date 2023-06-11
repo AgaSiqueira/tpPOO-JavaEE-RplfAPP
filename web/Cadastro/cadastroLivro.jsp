@@ -10,24 +10,40 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.2/css/bootstrap.min.css">
 
         <style>
-            body{
-                background-color: #87CEEB;
-            }
 
             form{
-                font-size: 20px;
+                font-size: 15px;
             }
 
-            #form{
-                border: 1px solid #000;
-                border-radius: 10px;
-                background-color: #4682B4;
-            }
         </style>
     </head>
     <body>
+   <header class="p-3 bg-dark">
+        <div class="container">
+            <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+                <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
+                    <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap"><use xlink:href="#bootstrap"></use></svg>
+                </a>
+
+                <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+                    <li><a href="/tpPOO-JavaEE-RplfAPP/alugadores.html" class="nav-link px-2 text-white">Alugadores</a></li>
+                    <li><a href="/tpPOO-JavaEE-RplfAPP/Consulta/livros.jsp" class="nav-link px-2 text-secondary">Livros</a></li>
+                    <li><a href="/tpPOO-JavaEE-RplfAPP/Consulta/reservas.jsp" class="nav-link px-2 text-white">Reservas</a></li>
+                </ul>
+
+                <div class="mx-5 text-center">
+                    <h3 class=" text-white">Cadastro de Livros</h3>
+                </div>
+
+                <div class="mx-5 text-end">
+                    <a href="/tpPOO-JavaEE-RplfAPP/login.html" class="btn btn-outline-light me-2" role="button" aria-disabled="true">Sair</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
         <div id="app" class="container" >
-            <h1 class="text-center">Cadastro de Livro</h1>
+
             <div id="form" class="row justify-content-center mx-5 mt-4 pb-4 pt-4">
                 <div class="col-md-6">
 
@@ -93,7 +109,7 @@
         <br>
         <div class="d-flex justify-content-between mx-5 mb-4">
             <div class="container">
-                <a href="../index.jsp" class="btn btn-secondary">Voltar ao Menu</a>
+                <a href="../alugadores.html" class="btn btn-secondary">Voltar ao Menu</a>
             </div>
             <div class="text-center bg-primary">
                 <a href="../Consulta/livros.jsp" class="btn btn-success"><strong>Livros cadastrados</strong></a>

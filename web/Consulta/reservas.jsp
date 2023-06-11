@@ -24,6 +24,7 @@
                 </li>
             </ul>
             <a href="../index.jsp">Voltar ao Menu</a>
+            <a href="../Cadastro/reservaLivro.jsp">Cadastrar reserva</a>
         </div>
     </div>
 
