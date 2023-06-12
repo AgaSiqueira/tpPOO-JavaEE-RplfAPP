@@ -96,7 +96,7 @@ public class LivroServlet extends HttpServlet {
             //pegando valores
             String titulo = body.getString("titulo");
             String autor = body.getString("autor");
-            String genero = body.getString("sinopse");
+            String genero = body.getString("genero");
             String sinopse = body.getString("sinopse");
             String editora = body.getString("editora");
             String isbn = body.getString("isbn");
@@ -147,7 +147,7 @@ public class LivroServlet extends HttpServlet {
             JSONObject body = getJSONBody(request.getReader());
             String titulo = body.getString("titulo");
             String autor = body.getString("autor");
-            String genero = body.getString("sinopse");
+            String genero = body.getString("genero");
             String sinopse = body.getString("sinopse");
             String editora = body.getString("editora");
             String isbn = body.getString("isbn");
